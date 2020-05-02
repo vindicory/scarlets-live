@@ -20,10 +20,8 @@ function wpcat_postsbycategory() {
     while ( $the_query->have_posts() ) {
       $the_query->the_post();
         $string .= '<a href="' . get_the_permalink() .'" rel="bookmark">';
-        $featureImgArr = wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true );
-        $string .= '<div class="gridpostitem" style="background: url(' . $featureImgArr[0] .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
-        $string .= '<img src="/wp-content/uploads/2020/04/blank.png" width="100%" height="100%">';
-
+        $featureImgArr = '../../wp-content/uploads/2020/04/Scarlets-Ultimate-XV-v2-1.jpg'; // . wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true );
+        $string .= '<div class="gridpostitem" style="background: url(' . $featureImgArr .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
         $string .= '  <div class="articlecategory"><div class="categorypadding bodyfont">NEWS</div></div>';
         $string .= '   <div class="articledate">';
         $string .= '     <div class="articlemonth bodyfont">MAR</div>';
@@ -60,7 +58,9 @@ function wpcat_postsbycategory() {
   
   //Register scripts to use
   function func_load_vuescripts() {
-    
+    wp_register_script('wpvue_vuejs', 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js', array(), '2.6.11', true);
+    wp_register_script('axios', 'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js', true);
+  
     wp_register_script('my_vuecode', 'https://cdn.jsdelivr.net/gh/vindicory/scarlets-live/scripts/vindico-post-grid/vindico-post-grid-vue.min.js', 'wpvue_vuejs', true );
   }
   //Tell WordPress to register the scripts 
@@ -68,6 +68,9 @@ function wpcat_postsbycategory() {
 
   //Return string for shortcode
   function func_wp_vue(){
+    wp_enqueue_script('wpvue_vuejs');	
+    wp_enqueue_script('axios');
+  
     wp_enqueue_script('my_vuecode');
 
     //Build String
