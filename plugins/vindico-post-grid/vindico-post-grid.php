@@ -60,30 +60,22 @@ function wpcat_postsbycategory() {
   
   //Register scripts to use
   function func_load_vuescripts() {
-    wp_register_script('wpvue_vuejs', 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js');
-    wp_register_script('moment', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js');
-    wp_register_script('axios', 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js');
-    wp_register_script('my_vuecode', plugin_dir_url( __FILE__ ).'vindico-post-grid.js', 'wpvue_vuejs', true );
+    
+    wp_register_script('my_vuecode', 'https://cdn.jsdelivr.net/gh/vindicory/scarlets-live/scripts/vindico-post-grid/vindico-post-grid-vue.min.js', 'wpvue_vuejs', true );
   }
   //Tell WordPress to register the scripts 
   add_action('wp_enqueue_scripts', 'func_load_vuescripts');
 
   //Return string for shortcode
   function func_wp_vue(){
-  //Add Vue.js
-  wp_enqueue_script('wpvue_vuejs');
-  //Add Axios
-  wp_enqueue_script('axios');
-  wp_enqueue_script('moment');
-  //Add my code to it
-  wp_enqueue_script('my_vuecode');
+    wp_enqueue_script('my_vuecode');
 
-  //Build String
-  $str= "<div id='divWpVue'><post-grid /></div>";
+    //Build String
+    $str= "<div id='divWpVue'><post-grid /></div>";
 
-  //Return to display
-  return $str;
-} // end function
+    //Return to display
+    return $str;
+  } // end function
 
 add_action('rest_api_init', 'register_rest_images' );
 

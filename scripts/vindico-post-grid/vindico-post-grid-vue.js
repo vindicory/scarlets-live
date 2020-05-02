@@ -1,4 +1,15 @@
 // post-item component
+
+//requires the following libraries to be installed globally by wp
+// add the following to functions.php
+//    wp_register_script('moment', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js');
+
+//    wp_register_script('wpvue_vuejs', 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js');
+//    wp_register_script('moment', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js');
+    // wp_register_script('axios', 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js');
+
+
+
 Vue.component('post-item', {
   data: function () {
     return {
