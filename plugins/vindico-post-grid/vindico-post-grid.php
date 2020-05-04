@@ -10,43 +10,83 @@
  */
 
 
-function wpcat_postsbycategory() {
-  // the query
-  $the_query = new WP_Query( array( 'News' => 'news', 'posts_per_page' => 3 ) ); 
-   
-  // The Loop
-  if ( $the_query->have_posts() ) {
-    $string .= '<div class="gridposts">';
-    while ( $the_query->have_posts() ) {
-      $the_query->the_post();
-        $string .= '<a href="' . get_the_permalink() .'" rel="bookmark">';
-        $featureImgArr = '../../wp-content/uploads/2020/04/Scarlets-Ultimate-XV-v2-1.jpg'; // . wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true );
-        $string .= '<div class="gridpostitem" style="background: url(' . $featureImgArr .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
-        $string .= '  <div class="articlecategory"><div class="categorypadding bodyfont">NEWS</div></div>';
-        $string .= '   <div class="articledate">';
-        $string .= '     <div class="articlemonth bodyfont">MAR</div>';
-        $string .= '     <div class="articleday titlefont">15</div>';
-        $string .= '     <div class="articleyear bodyfont">2020</div>';  
-        $string .= '   </div>';
-        
-        if ( has_post_thumbnail() ) {
-          //$string .= '<a href="' . get_the_permalink() .'" rel="bookmark">' . get_the_post_thumbnail($post_id, array( 50, 50) ) . get_the_title() .'</a></div>';
-          $string .= '<div class="articletitle"><div class="titlepadding bodyfont">'. get_the_title() .'</div></div>' ;
-        } else { 
-          // if no featured image is found
-          $string .= '<div><a href="' . get_the_permalink() .'" rel="bookmark">' . get_the_title() .'</a></div>';
-        }
-        $string .= '</a>';
-        $string .= '</div>';
-    }
-    $string .= '</div>';
+function wpcat_postsbycategory($atts, $content = null, $tag) {
+  
+  extract( shortcode_atts( array(
+    'limit' => '10',
+    'category' => '',
+    'gridclass' => 'gridposts',
+    'postclass' => 'articleclass'    
+  ), $atts ) );
+  
+  if ($category !== null) { 
+    $the_query = new WP_Query( array( 'category_name' => $category, 'posts_per_page' => 2 ) ); 
+    
+    if ( $the_query->have_posts() ) {
 
+      if ($limit > 1) { 
+        $output .= '<div class="'. $gridclass .'">';
+      }
+      while ( $the_query->have_posts() ) {
+        $the_query->the_post();
+        $postCategory = strtoupper($category);
+        $postTitle = get_the_title();     
+        $postMonth = strtoupper(get_the_date(__('M')));
+        $postDay = strtoupper(get_the_date(__('d')));
+        $postYear = strtoupper(get_the_date(__('Y')));
+        $postLink = get_the_permalink();
+        $postImage = wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true )[0];
+        $output .= '<div class="gridpostitem ' . $postclass . '" style="background: url(' . $postImage .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
+        $output .= '  <div class="articlecategory"><div class="categorypadding bodyfont">' . $postCategory . '</div></div>';
+        $output .= '  <div class="articledate">';
+        $output .= '    <div class="articlemonth bodyfont">' . $postMonth . '</div>';
+        $output .= '    <div class="articleday titlefont">' . $postDay . '</div>';
+        $output .= '    <div class="articleyear bodyfont">' . $postYear . '</div>';  
+        $output .= '  </div>';
+        $output .= '  <a href="' . $postLink .'" rel="bookmark"><div class="articletitle"><div class="titlepadding bodyfont">' . $postTitle .'</div></div></a>';
+        $output .= '</div>';      
+      }
+      if ($limit > 1) { 
+        $output .= '</div>';
+      }
+
+    } else {
+      $output = '<pre style="font-size:15px">NO POSTS FOUND</pre>';
+    }
   } else {
-        // no posts found
+    $output = 'CATEGORY NOT SPECIFIED';
+    // the query
+    $the_query = new WP_Query( array( 'News' => 'news', 'posts_per_page' => 3 ) );  
+    // The Loop
+    if ( $the_query->have_posts() ) {
+      $string .= '<div class="gridposts">';
+      while ( $the_query->have_posts() ) {
+        $the_query->the_post();
+          $string .= '<a href="' . get_the_permalink() .'" rel="bookmark">';
+          $featureImgArr = 'https://res.cloudinary.com/vindico/image/upload/v1588492036/Scarlets-Ultimate-XV-v2-1_qeu3lg.jpg'; // . wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true );
+          $string .= '<div class="gridpostitem" style="background: url(' . $featureImgArr .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
+          $string .= '  <div class="articlecategory"><div class="categorypadding bodyfont">NEWS</div></div>';
+          $string .= '   <div class="articledate">';
+          $string .= '     <div class="articlemonth bodyfont">MAR</div>';
+          $string .= '     <div class="articleday titlefont">15</div>';
+          $string .= '     <div class="articleyear bodyfont">2020</div>';  
+          $string .= '   </div>';        
+          if ( has_post_thumbnail() ) {
+            //$string .= '<a href="' . get_the_permalink() .'" rel="bookmark">' . get_the_post_thumbnail($post_id, array( 50, 50) ) . get_the_title() .'</a></div>';
+            $string .= '<div class="articletitle"><div class="titlepadding bodyfont">'. get_the_title() .'</div></div>' ;
+          } else { 
+            // if no featured image is found
+            $string .= '<div><a href="' . get_the_permalink() .'" rel="bookmark">' . get_the_title() .'</a></div>';
+          }
+          $string .= '</a>';
+          $string .= '</div>';
+      }
+      $string .= '</div>';
+    } else {
+          // no posts found
+    }
   }
-   
-  return $string;
-   
+  return $output; //$string;
   /* Restore original Post Data */
   wp_reset_postdata();
   }
