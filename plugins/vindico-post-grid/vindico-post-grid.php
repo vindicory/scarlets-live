@@ -14,81 +14,62 @@ function wpcat_postsbycategory($atts, $content = null, $tag) {
   
   extract( shortcode_atts( array(
     'limit' => '10',
+    'position' => 'na',
     'category' => '',
     'gridclass' => 'gridposts',
     'postclass' => 'articleclass'    
   ), $atts ) );
   
   if ($category !== null) { 
-    $the_query = new WP_Query( array( 'category_name' => $category, 'posts_per_page' => 2 ) ); 
+    $the_query = new WP_Query( array( 'category_name' => $category, 'posts_per_page' => $limit ) ); 
     
     if ( $the_query->have_posts() ) {
 
       if ($limit > 1) { 
         $output .= '<div class="'. $gridclass .'">';
       }
+      $count = 0;
+      $countType = '';
       while ( $the_query->have_posts() ) {
         $the_query->the_post();
+        $count++;
+        if($count % 2 == 0){ 
+          $countType = 'postitem-even';  
+        } else { 
+          $countType = 'postitem-odd';  
+        } 
         $postCategory = strtoupper($category);
-        $postTitle = get_the_title();     
-        $postMonth = strtoupper(get_the_date(__('M')));
-        $postDay = strtoupper(get_the_date(__('d')));
-        $postYear = strtoupper(get_the_date(__('Y')));
-        $postLink = get_the_permalink();
-        $postImage = wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true )[0];
-        $output .= '<div class="gridpostitem ' . $postclass . '" style="background: url(' . $postImage .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
-        $output .= '  <div class="articlecategory"><div class="categorypadding bodyfont">' . $postCategory . '</div></div>';
-        $output .= '  <div class="articledate">';
-        $output .= '    <div class="articlemonth bodyfont">' . $postMonth . '</div>';
-        $output .= '    <div class="articleday titlefont">' . $postDay . '</div>';
-        $output .= '    <div class="articleyear bodyfont">' . $postYear . '</div>';  
-        $output .= '  </div>';
-        $output .= '  <a href="' . $postLink .'" rel="bookmark"><div class="articletitle"><div class="titlepadding bodyfont">' . $postTitle .'</div></div></a>';
-        $output .= '</div>';      
+          $postTitle = get_the_title();     
+          $postMonth = strtoupper(get_the_date(__('M')));
+          $postDay = strtoupper(get_the_date(__('d')));
+          $postYear = strtoupper(get_the_date(__('Y')));
+          $postLink = get_the_permalink();
+          $postImage = wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true )[0];
+          $output .= '<div onclick="window.location.href = \''. $postLink .'\'" class="gridpostitem ' . $postclass . ' postitem-' . $count . ' ' . $countType . '" style="background: url(' . $postImage .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
+          $output .= '  <div class="articlecategory"><div class="categorypadding bodyfont">' . $postCategory . '</div></div>';
+          $output .= '  <div class="articledate">';
+          $output .= '    <div class="articlemonth bodyfont">' . $postMonth . '</div>';
+          $output .= '    <div class="articleday titlefont">' . $postDay . '</div>';
+          $output .= '    <div class="articleyear bodyfont">' . $postYear . '</div>';  
+          $output .= '  </div>';
+          $output .= '  <div class="articletitle"><a href="' . $postLink .'" rel="bookmark"><div class="titlepadding bodyfont">' . $postTitle .'</div></a></div>';
+          $output .= '</div>';      
       }
       if ($limit > 1) { 
         $output .= '</div>';
       }
 
     } else {
-      $output = '<pre style="font-size:15px">NO POSTS FOUND</pre>';
+      // $output = '<pre style="font-size:15px">NO POSTS FOUND</pre>';
     }
   } else {
     $output = 'CATEGORY NOT SPECIFIED';
     // the query
-    $the_query = new WP_Query( array( 'News' => 'news', 'posts_per_page' => 3 ) );  
-    // The Loop
-    if ( $the_query->have_posts() ) {
-      $string .= '<div class="gridposts">';
-      while ( $the_query->have_posts() ) {
-        $the_query->the_post();
-          $string .= '<a href="' . get_the_permalink() .'" rel="bookmark">';
-          $featureImgArr = 'https://res.cloudinary.com/vindico/image/upload/v1588492036/Scarlets-Ultimate-XV-v2-1_qeu3lg.jpg'; // . wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true );
-          $string .= '<div class="gridpostitem" style="background: url(' . $featureImgArr .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
-          $string .= '  <div class="articlecategory"><div class="categorypadding bodyfont">NEWS</div></div>';
-          $string .= '   <div class="articledate">';
-          $string .= '     <div class="articlemonth bodyfont">MAR</div>';
-          $string .= '     <div class="articleday titlefont">15</div>';
-          $string .= '     <div class="articleyear bodyfont">2020</div>';  
-          $string .= '   </div>';        
-          if ( has_post_thumbnail() ) {
-            //$string .= '<a href="' . get_the_permalink() .'" rel="bookmark">' . get_the_post_thumbnail($post_id, array( 50, 50) ) . get_the_title() .'</a></div>';
-            $string .= '<div class="articletitle"><div class="titlepadding bodyfont">'. get_the_title() .'</div></div>' ;
-          } else { 
-            // if no featured image is found
-            $string .= '<div><a href="' . get_the_permalink() .'" rel="bookmark">' . get_the_title() .'</a></div>';
-          }
-          $string .= '</a>';
-          $string .= '</div>';
-      }
-      $string .= '</div>';
-    } else {
-          // no posts found
-    }
   }
+    /* Restore original Post Data */
+    wp_reset_postdata();
   return $output; //$string;
-  /* Restore original Post Data */
-  wp_reset_postdata();
+
   }
   // Add a shortcode
   add_shortcode('categoryposts', 'wpcat_postsbycategory');
