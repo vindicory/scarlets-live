@@ -46,13 +46,13 @@ function wpcat_postsbycategory($atts, $content = null, $tag) {
           $postLink = get_the_permalink();
           $postImage = wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true )[0];
           $output .= '<div onclick="window.location.href = \''. $postLink .'\'" class="gridpostitem ' . $postclass . ' postitem-' . $count . ' ' . $countType . '" style="background: url(' . $postImage .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
-          $output .= '  <div class="articlecategory"><div class="categorypadding bodyfont">' . $postCategory . '</div></div>';
+          $output .= '  <div class="articlecategory"><div class="categorypadding">' . $postCategory . '</div></div>';
           $output .= '  <div class="articledate">';
-          $output .= '    <div class="articlemonth bodyfont">' . $postMonth . '</div>';
-          $output .= '    <div class="articleday titlefont">' . $postDay . '</div>';
-          $output .= '    <div class="articleyear bodyfont">' . $postYear . '</div>';  
+          $output .= '    <div class="articlemonth">' . $postMonth . '</div>';
+          $output .= '    <div class="articleday">' . $postDay . '</div>';
+          $output .= '    <div class="articleyear">' . $postYear . '</div>';  
           $output .= '  </div>';
-          $output .= '  <div class="articletitle"><a href="' . $postLink .'" rel="bookmark"><div class="titlepadding bodyfont">' . $postTitle .'</div></a></div>';
+          $output .= '  <div class="articletitle"><a href="' . $postLink .'" rel="bookmark"><div class="titlepadding">' . $postTitle .'</div></a></div>';
           $output .= '</div>';      
       }
       if ($limit > 1) { 

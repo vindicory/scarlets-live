@@ -20,8 +20,8 @@ function vindico_youtube_grid($atts, $content = null, $tag) {
     'category' => '',
     'gridclass' => 'youtubegrid',
     'postclass' => 'youtubepost',
-    'youtubeapikey' => 'AIzaSyAb-KJKEvWjyYZVw5lx0-vM1RdW9JqNQaU',
-    'youtubechannel' => 'UCSpQ51CzUYp_ambKRD7fDCg',
+    'youtubeapikey' => '',
+    'youtubechannel' => '',
   ), $atts ) );
 
   $apiURL = 'https://www.googleapis.com/youtube/v3/search?part=snippet'; // main apiURL
@@ -70,13 +70,13 @@ if ($limit > 1) {
     $postLink = 'https://www.youtube.com/embed/' . $postVideoId . '?wmode=transparent&autoplay=1'; //get_the_permalink();
     $postImage = $item->snippet->thumbnails->high->url; //'https://images.wallpaperscraft.com/image/fireplace_example_interior_living_room_sofas_80288_1280x720.jpg'; //wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true )[0];
     $output .= '<div onclick="openModal(\''.$postLink.'\');" class="gridpostitem ' . $postclass . ' postitem-' . $count . ' ' . $countType . '" style="background: url(' . $postImage .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
-    $output .= '  <div class="youtubecategory"><div class="categorypadding bodyfont">' . $postCategory . '</div></div>';
+    $output .= '  <div class="youtubecategory"><div class="categorypadding">' . $postCategory . '</div></div>';
     $output .= '  <div class="articledate">';
-    $output .= '    <div class="articlemonth bodyfont">' . $postMonth . '</div>';
-    $output .= '    <div class="articleday titlefont">' . $postDay . '</div>';
-    $output .= '    <div class="articleyear bodyfont">' . $postYear . '</div>';  
+    $output .= '    <div class="articlemonth">' . $postMonth . '</div>';
+    $output .= '    <div class="articleday">' . $postDay . '</div>';
+    $output .= '    <div class="articleyear">' . $postYear . '</div>';  
     $output .= '  </div>';
-    $output .= '  <div class="articletitle"><a href="' . $postLink .'" rel="bookmark"><div class="titlepadding bodyfont">' . $postTitle .'</div></a></div>';
+    $output .= '  <div class="articletitle"><a href="' . $postLink .'" rel="bookmark"><div class="titlepadding">' . $postTitle .'</div></a></div>';
     $output .= '</div>';
     //    $output .= '<iframe title="TEST TEST TEST" allowtransparency="true" class="youtubeiframe" src="' . $postLink . '"></iframe></div>';
   }
