@@ -7,7 +7,7 @@
  * Text Domain: vindico-youtube-grid
  * Author: Vindico
  * Author URI: https://www.vindico.net
- * Example:   [youtube-grid youtubeapikey="AIzaSyDQ0sqhPW_KM_n3mDyBFVu_KZusHwKZQrE" youtubechannel="UCSpQ51CzUYp_ambKRD7fDCg" limit="4" /]
+ * Example:   [youtube-grid youtubeapikey="" youtubechannel="" limit="4" /]
  */
 
 
@@ -18,8 +18,8 @@ function vindico_youtube_grid($atts, $content = null, $tag) {
     'order' => 'date',
     'type' => 'video',
     'category' => '',
-    'gridclass' => 'youtubegrid',
-    'postclass' => 'youtubepost',
+    'gridclass' => 'videogrid',
+    'postclass' => 'videopost',
     'youtubeapikey' => '',
     'youtubechannel' => '',
   ), $atts ) );
@@ -48,9 +48,9 @@ function vindico_youtube_grid($atts, $content = null, $tag) {
 $count = 0;
 $countType = '';
 if ($limit > 1) { 
-  $output .= '<div class="youtubegrid">';
+  $output .= '<div class="videogrid">';
 }
-
+ 
   foreach ($items as $item) {
     $count++;
     if($count % 2 == 0){ 
@@ -58,6 +58,7 @@ if ($limit > 1) {
     } else { 
       $countType = 'videoitem-odd';  
     } 
+                   
 //    $output .= $item->snippet->title . '<br />';
     $postCategory = 'YOUTUBE'; //strtoupper($category);
     $postTitle = $item->snippet->title;
@@ -70,13 +71,22 @@ if ($limit > 1) {
     $postLink = 'https://www.youtube.com/embed/' . $postVideoId . '?wmode=transparent&autoplay=1'; //get_the_permalink();
     $postImage = $item->snippet->thumbnails->high->url; //'https://images.wallpaperscraft.com/image/fireplace_example_interior_living_room_sofas_80288_1280x720.jpg'; //wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true )[0];
     $output .= '<div onclick="openModal(\''.$postLink.'\');" class="gridpostitem ' . $postclass . ' postitem-' . $count . ' ' . $countType . '" style="background: url(' . $postImage .'); background-size: cover; background-repeat: no-repeat; background-position: center;">';
-    $output .= '  <div class="youtubecategory"><div class="categorypadding">' . $postCategory . '</div></div>';
-    $output .= '  <div class="articledate">';
-    $output .= '    <div class="articlemonth">' . $postMonth . '</div>';
-    $output .= '    <div class="articleday">' . $postDay . '</div>';
-    $output .= '    <div class="articleyear">' . $postYear . '</div>';  
+    $output .= '  <div class="videocategory"><div class="categorypadding">' . $postCategory . '</div></div>';
+    $output .= '  <div class="videodate">';
+    $output .= '    <div class="videomonth">' . $postMonth . '</div>';
+    $output .= '    <div class="videoday">' . $postDay . '</div>';
+    $output .= '    <div class="videoyear">' . $postYear . '</div>';  
     $output .= '  </div>';
-    $output .= '  <div class="articletitle"><a href="' . $postLink .'" rel="bookmark"><div class="titlepadding">' . $postTitle .'</div></a></div>';
+   
+    $output .= '  <div class="playicon" onclick="openModal(\''.$postLink.'\');">';
+    $output .= '    <figure class="swap-on-hover">';
+    $output .= '      <img  class="swap-on-hover__front-image playiconimg" src="/wp-content/uploads/2020/05/PlayButton-Black.svg"/>';
+    $output .= '      <img class="swap-on-hover__back-image playiconimg" src="/wp-content/uploads/2020/05/PlayButton-Red.svg"/>';
+    $output .= '    </figure>';
+    $output .= '  </div>';
+
+
+    $output .= '  <div class="videotitle"><a href="' . $postLink .'" rel="bookmark"><div class="titlepadding">' . $postTitle .'</div></a></div>';
     $output .= '</div>';
     //    $output .= '<iframe title="TEST TEST TEST" allowtransparency="true" class="youtubeiframe" src="' . $postLink . '"></iframe></div>';
   }
