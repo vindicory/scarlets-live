@@ -7,7 +7,7 @@
  * Text Domain: vindico-youtube-grid
  * Author: Vindico
  * Author URI: https://www.vindico.net
- * Example:   [youtube-grid youtubeapikey="" youtubechannel="" limit="4" /]
+ * Example:   [youtube-grid year="2020" limit="4" sort="asc" /]
  */
 
 
@@ -15,33 +15,27 @@ function vindico_youtube_grid($atts, $content = null, $tag) {
   extract( shortcode_atts( array(
     'limit' => '4',
     'position' => 'na',
-    'order' => 'date',
-    'type' => 'video',
-    'category' => '',
+    'sort' => 'desc',
+    'year' => '2020',
     'gridclass' => 'videogrid',
     'postclass' => 'videopost',
-    'youtubeapikey' => '',
-    'youtubechannel' => '',
   ), $atts ) );
 
-  $apiURL = 'https://www.googleapis.com/youtube/v3/search?part=snippet'; // main apiURL
-  $apiURL .= '&channelId=' . $youtubechannel; 
-  $apiURL .= '&maxResults=' . $limit;
-  $apiURL .= '&order=' . $order;
-  $apiURL .= '&type=' . $type;
-  $apiURL .= '&key=' . $youtubeapikey;
+  $apiURL = 'https://rugbydata.vindico.cloud/api/youtubeResults/'; // main apiURL
+  $apiURL .= $limit;
+  $apiURL .= '?sort=' . $sort;
+  if ($year !== null) { 
+    $apiURL .= '&year=' . $year;
+  }
   
-  //$request = wp_remote_get($apiURL, array('sslverify' => false) );
-  $sampleData = plugin_dir_path( __FILE__ ) . 'sampledata.json';
-  $json = json_decode(file_get_contents($sampleData));
+  $request = wp_remote_get($apiURL, array('sslverify' => false) );
+  //$sampleData = plugin_dir_path( __FILE__ ) . 'sampledata.json';
+  //$json = json_decode(file_get_contents($sampleData));
    
   
-  //$body = wp_remote_retrieve_body( $request );
-  
-  
-  
-//  $json = json_decode($json);
-  $items = $json->items; // extract data tree
+  $body = wp_remote_retrieve_body( $request );
+  $json = json_decode($body);
+  $items = $json->data; // extract data tree
   
 //  $items = explode(',', $json);
 
@@ -64,9 +58,9 @@ if ($limit > 1) {
     $postTitle = $item->snippet->title;
 //    2020-04-23T10:27:05.000Z",
     $postDate = date_create($item->snippet->publishTime);    
-    $postMonth = date_format($postDate, 'M');
-    $postDay = date_format($postDate, 'd'); // strtoupper(get_the_date(__('d')));
-    $postYear = date_format($postDate, 'Y');; //strtoupper(get_the_date(__('Y')));
+    $postMonth = $item->publishedMonth;
+    $postDay = $item->publishedDay; // strtoupper(get_the_date(__('d')));
+    $postYear = $item->publishedYear; //strtoupper(get_the_date(__('Y')));
     $postVideoId = $item->id->videoId;
     $postLink = 'https://www.youtube.com/embed/' . $postVideoId . '?wmode=transparent&autoplay=1'; //get_the_permalink();
     $postImage = $item->snippet->thumbnails->high->url; //'https://images.wallpaperscraft.com/image/fireplace_example_interior_living_room_sofas_80288_1280x720.jpg'; //wp_get_attachment_image_src(get_post_thumbnail_id(), $size, true )[0];
@@ -94,10 +88,10 @@ if ($limit > 1) {
     $output .= '</div>';
   }
 
-  //$output = $apiURL;
+  //return $output = $apiURL;
   //return 'Path is ' . $sampleData;
   //return 'var_dump - ' . var_dump($json);
-  //return 'JSON - <pre>' . print_r($json->items, true) . '</pre>';
+  //return 'JSON - <pre>' . print_r($json->data, true) . '</pre>';
   return $output; //$string;
 
 }
