@@ -20,8 +20,8 @@ function vindico_youtube_grid($atts, $content = null, $tag) {
     'category' => '',
     'gridclass' => 'youtubegrid',
     'postclass' => 'youtubepost',
-    'youtubeapikey' => 'AIzaSyAb-KJKEvWjyYZVw5lx0-vM1RdW9JqNQaU',
-    'youtubechannel' => 'UCSpQ51CzUYp_ambKRD7fDCg',
+    'youtubeapikey' => '',
+    'youtubechannel' => '',
   ), $atts ) );
 
   $apiURL = 'https://www.googleapis.com/youtube/v3/search?part=snippet'; // main apiURL
