@@ -87,7 +87,7 @@ Vue.component('post-grid', {
         { id: '11', name:'Featured', slug: 'featured'},
       ],
       posts: [],
-      postsURL: 'http://178.62.47.158/wp-json/wp/v2/posts', //
+      postsURL: 'http://www.scarlets.wales/wp-json/wp/v2/posts', //
       postsData: {
         per_page: 10,
         page:  1
