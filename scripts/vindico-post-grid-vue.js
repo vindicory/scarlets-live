@@ -35,7 +35,6 @@ Vue.component('post-item', {
 
   },
   template: `
-
       <div class="gridpostitem" :style="backgroundImage">
         <div class="articlecategory"><div class="categorypadding">{{ lookupCategory(this.post.categories[0]) }}</div></div>
         <div class="articledate">
